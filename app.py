@@ -7,16 +7,29 @@ from langchain.prompts import (
 )
 
 import scrapetube
+import csv
 
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
-videos = scrapetube.get_playlist("PLGUrrUAOkNHXNI_35_m7Rg5o-47GSAFIH")
-video_list = []
+current_videos = scrapetube.get_channel("UCyidya9fsxI-j1FG5_nZPXg")
+current_videos_id = []
+for video in current_videos:
+    current_videos_id.append(video['videoId'])
 
-for video in videos:
-    video_list.append("https://youtu.be/"+str(video['videoId']))
+old_videos_id = read_old_videos('videos.csv')
 
-vectorstore = chroma_vectorstore(video_list=video_list)
+new_videos = list(set(current_videos_id) - set(old_videos_id))
+
+videos_to_add = []
+for id in new_videos:
+    videos_to_add.append("https://youtu.be/"+str(id))
+
+vectorstore = chroma_vectorstore()
+
+if len(videos_to_add) > 0:
+    vectorstore = update_chroma_youtube(vectorstore, videos_to_add)
+else:
+    pass
 
 st.title("Office Of Cards ChatBot")
 
@@ -42,6 +55,9 @@ conv = get_conversation_chain(vectorstore, sys_msg, human_message_prompt)
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+if "conv" not in st.session_state:
+    st.session_state.conv = conv
+
 with st.chat_message("assistant"):
         st.write_stream(stream_data('Ciao, sono Davide Cervellin. Come posso esserti utile?'))
 
@@ -55,7 +71,7 @@ if prompt := st.chat_input("Fammi una domanda"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        results = conv({"question": prompt})
+        results = st.session_state.conv({"question": prompt})
 
         st.write_stream(stream_data(results['answer']))
 

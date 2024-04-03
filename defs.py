@@ -10,6 +10,7 @@ from langchain.prompts import (
 )
 import time
 import scrapetube
+import csv
 
 def update_chroma_youtube(vectorstore, video_list):
     for url in video_list:
@@ -69,7 +70,7 @@ def get_conversation_chain(vector_store, system_message:str, human_message:str) 
     Returns:
         ConversationalRetrievalChain: Chatbot conversation chain
     """
-    llm = ChatOpenAI(model_name="gpt-4", temperature=0) # possiamo cambiare modello a piacimento
+    llm = ChatOpenAI(model_name="gpt-4-1106-preview", temperature=0) # possiamo cambiare modello a piacimento
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True, output_key='answer')
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
@@ -122,3 +123,10 @@ def get_sources(results):
         sources[source.metadata['url']] = text
 
     return sources
+
+def read_old_videos(csv_file):
+    with open(csv_file, newline='') as f:
+        reader = csv.reader(f)
+        data = list(reader)
+
+    return data[0]
