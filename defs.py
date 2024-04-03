@@ -70,7 +70,7 @@ def get_conversation_chain(vector_store, system_message:str, human_message:str) 
     Returns:
         ConversationalRetrievalChain: Chatbot conversation chain
     """
-    llm = ChatOpenAI(model_name="gpt-4-1106-preview", temperature=0) # possiamo cambiare modello a piacimento
+    llm = ChatOpenAI(model_name="gpt-4", temperature=0) # possiamo cambiare modello a piacimento
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True, output_key='answer')
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
