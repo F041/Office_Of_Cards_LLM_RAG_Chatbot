@@ -130,3 +130,8 @@ def read_old_videos(csv_file):
         data = list(reader)
 
     return data[0]
+
+def save_video_list(name, video_exp):
+     with open(name, 'w', newline='') as myfile:
+          wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+          wr.writerow(video_exp)

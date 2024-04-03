@@ -28,6 +28,7 @@ vectorstore = chroma_vectorstore()
 
 if len(videos_to_add) > 0:
     vectorstore = update_chroma_youtube(vectorstore, videos_to_add)
+    save_video_list('videos.csv', current_videos_id)
 else:
     pass
 
