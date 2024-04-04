@@ -1,3 +1,4 @@
+# Importing necessary modules and classes
 from langchain.text_splitter import RecursiveCharacterTextSplitter, NLTKTextSplitter
 from langchain_community.document_loaders import YoutubeLoader, DirectoryLoader, UnstructuredEPubLoader
 from langchain_community.vectorstores import Chroma
@@ -12,6 +13,7 @@ import time
 import scrapetube
 import csv
 
+# Function to update the Chroma vector store with new YouTube videos
 def update_chroma_youtube(vectorstore, video_list):
     for url in video_list:
         loader_yt = YoutubeLoader.from_youtube_url(
@@ -28,6 +30,7 @@ def update_chroma_youtube(vectorstore, video_list):
     
     return vectorstore
 
+# Function to create or load the Chroma vector store
 def chroma_vectorstore(video_list = []):
     save_load = './vectorstore/chroma'
     embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
@@ -39,7 +42,6 @@ def chroma_vectorstore(video_list = []):
         loader_epub = DirectoryLoader('./sources/', glob="./*.epub", loader_cls=UnstructuredEPubLoader)
         documents = loader_epub.load()
         documents[0].metadata['url'] = 'https://amzn.to/3UX6umg'
-        #text_splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=25)
         text_splitter = NLTKTextSplitter()
         docs = text_splitter.split_documents(documents)
 
@@ -58,19 +60,9 @@ def chroma_vectorstore(video_list = []):
             
     return vector_store
 
+# Function to create a conversation chain for the chatbot
 def get_conversation_chain(vector_store, system_message:str, human_message:str) -> ConversationalRetrievalChain:
-    """
-    Oggetto LangChain che permette domanda-risposta tra umano e LLM
-
-    Args:
-        vector_store: Vector store
-        system_message (str): System message
-        human_message (str): Human message
-
-    Returns:
-        ConversationalRetrievalChain: Chatbot conversation chain
-    """
-    llm = ChatOpenAI(model_name="gpt-4", temperature=0) # possiamo cambiare modello a piacimento
+    llm = ChatOpenAI(model_name="gpt-4", temperature=0) 
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True, output_key='answer')
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
@@ -88,17 +80,8 @@ def get_conversation_chain(vector_store, system_message:str, human_message:str) 
     )
     return conversation_chain
 
+# Function to retrieve a list of video URLs from a given source (channel or playlist)
 def get_video_list(source) -> list:
-    """
-    Retrieve a video url list from a channel or youtube playlist.
-
-    Args:
-        source: channel or playlist ID
-
-    Returns:
-        video_list: unordered video list
-    """
-
     videos = scrapetube.get_playlist(source)
     video_list = []
 
@@ -107,11 +90,13 @@ def get_video_list(source) -> list:
     
     return video_list
 
+# Function to stream data
 def stream_data(text):
     for word in text.split(" "):
         yield word + " "
         time.sleep(0.02)
 
+# Function to extract sources from the results of a query
 def get_sources(results):
     sources = {}
     for source in results['source_documents']:
@@ -124,6 +109,7 @@ def get_sources(results):
 
     return sources
 
+# Function to read old video IDs from a CSV file
 def read_old_videos(csv_file):
     with open(csv_file, newline='') as f:
         reader = csv.reader(f)
@@ -131,6 +117,7 @@ def read_old_videos(csv_file):
 
     return data[0]
 
+# Function to save video IDs to a CSV file
 def save_video_list(name, video_exp):
      with open(name, 'w', newline='') as myfile:
           wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
