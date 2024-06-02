@@ -23,7 +23,8 @@ Office Of Cards LLM RAG ChatBot è un'applicazione web interattiva che fornisce 
 3. Ricevi risposte generate dall'intelligenza artificiale, accompagnate da fonti pertinenti.
 
 ## Contributi
-Siamo aperti ai contributi! Se desideri contribuire a questo progetto, segui le istruzioni nella sezione "Contributing" del repository.
+Siamo aperti ai contributi! Se desideri contribuire a questo progetto contatta il team di sviluppo:
+- [Simone Cecconi](mailto:smn.ccc@gmail.com)
 
 ## Licenza
 Questo progetto è concesso in licenza sotto i termini della licenza [MIT](LICENSE.md).

@@ -12,30 +12,7 @@ import scrapetube
 # Fetching OpenAI API key from Streamlit secrets
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
-# Fetching current videos from YouTube channel
-current_videos = scrapetube.get_channel("UCyidya9fsxI-j1FG5_nZPXg")
-current_videos_id = []
-for video in current_videos:
-    current_videos_id.append(video['videoId'])
-
-# Reading old video IDs from a CSV file
-old_videos_id = read_old_videos('videos.csv')
-
-# Determining new videos by comparing current and old video IDs
-new_videos = list(set(current_videos_id) - set(old_videos_id))
-
-# Constructing URLs for new videos
-videos_to_add = []
-for id in new_videos:
-    videos_to_add.append("https://youtu.be/"+str(id))
-
-# Creating or updating a Chroma vector store with new videos
-vectorstore = chroma_vectorstore()
-if len(videos_to_add) > 0:
-    vectorstore = update_chroma_youtube(vectorstore, videos_to_add)
-    save_video_list('videos.csv', current_videos_id)
-else:
-    pass
+vectorstore = check_and_update_new_videos(channel_id = "UCyidya9fsxI-j1FG5_nZPXg", old_videos_file = 'videos.csv', vectorstore=chroma_vectorstore())
 
 # Setting up Streamlit title
 st.title("Office Of Cards ChatBot")
