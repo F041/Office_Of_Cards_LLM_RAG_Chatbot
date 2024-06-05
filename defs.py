@@ -62,7 +62,7 @@ def chroma_vectorstore(video_list = []):
 
 # Function to create a conversation chain for the chatbot
 def get_conversation_chain(vector_store, system_message:str, human_message:str) -> ConversationalRetrievalChain:
-    llm = ChatOpenAI(model_name="gpt-4", temperature=0) 
+    llm = ChatOpenAI(model_name="gpt-4o", temperature=0) 
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True, output_key='answer')
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
