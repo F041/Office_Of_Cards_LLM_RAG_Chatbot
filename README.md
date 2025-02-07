@@ -4,7 +4,7 @@
 
 ## Descrizione
 Office Of Cards LLM RAG ChatBot è un'applicazione web interattiva che fornisce un assistente virtuale basato su intelligenza artificiale per rispondere alle domande degli utenti riguardo al contenuto del [canale YouTube](https://www.youtube.com/@OfficeofCards), [podcast](https://open.spotify.com/show/2cqzDBQRxqgba39VPp3FDs) e [libro](https://amzn.to/3VG7ifT) "Office Of Cards" di Davide Cervellin. L'applicazione utilizza Streamlit per l'interfaccia utente e GPT-4 per la generazione delle risposte.
-Il vectorDB viene popolato dalle trascrizione YouTube tramite langchain.
+Il vectorDB viene popolato dalle trascrizione YouTube tramite langchain e poi
 
 ## Requisiti
 - Python 3.x
